@@ -1,5 +1,6 @@
 <?php
 
-    Class Users {
-        public $name;
-    }
+Class User {
+    public function __construct() {}
+    public $name;
+}

@@ -11,7 +11,7 @@ class App {
     public function __construct()
     {
         $url = $this->parseUrl();
-        
+        var_dump($url);
         if(file_exists('../app/controllers/'. $url[0] .'.php'))
         {
             $this->controller = $url[0];
@@ -19,8 +19,9 @@ class App {
         }
    
         require_once '../app/controllers/'. $this->controller.'.php';
-
+        
         $this->controller = new $this->controller;
+        
 
         if(isset($url[1])) 
         {
@@ -30,9 +31,10 @@ class App {
                 unset($url[1]);
             }
         }
-        var_dump($url);
+        //var_dump($this->method);
         $this->params = $url ? array_values($url) : [];
-        
+        var_dump($this->params);
+
         call_user_func_array([$this->controller, $this->method], $this->params);
     }
 
