@@ -60,7 +60,6 @@
   crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
     <script type="text/javascript">
       
@@ -111,7 +110,7 @@
             url: url,
             success: function(data)
             {
-              var dataObj = JSON.parse(data);    
+               var dataObj = JSON.parse(data);    
               
                 var view = "";
                 if(dataObj.length > 0) 
@@ -139,9 +138,8 @@
                         '<td>' +
                         '<form method="post">' +
                         '<input type="hidden" name="id" value=' + dataObj[i].id + '>' +
-                        '<input class="btn btn-primary" type="submit" name="fillToUpdate" value="Update"' + 'onclick="return confirm(' + "'Want to Update?'" + ')"> ' +
+                        '<input class="btn btn-primary" type="submit" name="fillToEdit" value="Edit"' + 'onclick="return confirm(' + "'Want to Edit?'" + ')"> ' +
                         '<input class="btn btn-primary" type="submit" name="deleteById" value="Delete"' + 'onclick="return confirm(' + "'Want to Delete?'" + ')">' +
-                        // onclick="return confirm('Want to Submit?')
                         '</form>' +
                         '</td>' +
                       '</tr>'; 
@@ -150,6 +148,7 @@
          
                   
                 }
+
                 document.getElementById("allList").innerHTML = view;
 
             }                             

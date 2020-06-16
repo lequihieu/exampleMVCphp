@@ -3,6 +3,7 @@
 
 class Home extends Controller
 {
+
     public function index($name = '')
     {   
         $user = $this->model('User');
@@ -23,11 +24,11 @@ class Home extends Controller
     public function addStudent() {
         $servername = "localhost";
         $username = "root";
-        $password = "Ridaica123";
+        $password = "Ridaica123~";
         $dbname = "studentdb";
         $conn = new mysqli($servername, $username, $password, $dbname);
 
-
+        
         //header('Content-type: text/javascript');
         // $json = array(
         //     'name' => '',
@@ -64,7 +65,7 @@ class Home extends Controller
 
         $servername = "localhost";
         $username = "root";
-        $password = "Ridaica123";
+        $password = "Ridaica123~";
         $dbname = "studentdb";
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
