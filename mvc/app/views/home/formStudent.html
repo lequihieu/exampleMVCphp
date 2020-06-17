@@ -11,29 +11,32 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-3">
-              <div>
-                       
-                  <button type="button" name="add" id="add" data-toggle="modal" data-target="#add_data_Modal" class="btn btn-warning">Add</button>  
-                      
-                   
-              </div>
-     </div>
-      <div class="col-9">
+               <div class="col-1">
+                    <button type="button" name="add" id="add" data-toggle="modal" data-target="#add_data_Modal" class="btn btn-warning">Add Student</button>
+                    <p></p>
+                    <button type="button" name="add" id="add" data-toggle="modal" data-target="#add_data_Modal" class="btn btn-warning">Add Class</button>
+               </div>    
+     <div class="col-11">
 
-                  <div>
-                    <form  id = "idGetAll" method="get" action = "../home/getAllList">
-                      <button class="btn btn-primary" type="submit" name="getAllList" >Get All Student </button>
+               <div>
+                    
+                      
+                    <form  method="post">
+                         <div class="row">
+                              <div class="col-1">
+                                   <button class="btn btn-primary" type="submit" name="searchList">Search </button>
+                              </div>
+                              <div class="col-5">
+                                   <input class="form-control" type="text" name="textSearch" placeholder="Text Search"> 
+                              </div>
+                         </div>    
                     </form>
+                    
                   </div>
 
-                  <div id = "allList">
-                  
-                  </div>
+                  <div id = "student_table"> 
 
-                  <div>
-                      
-                  </div>
+               </div>
       </div>    
     </div>   
 </div>
@@ -78,47 +81,7 @@
 
     <script type="text/javascript">
       
-      $("#idForm").submit(function(e) {
-
-        e.preventDefault(); // avoid to execute the actual submit of the form.
-
-        var form = $(this);
-        var url = form.attr('action');
-        
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: form.serialize(),  // serializes the form's elements.
-            success: function(data)
-            {
-              
-                  
-                  alert(data);                
-                  
-                 // show response from the php script.
-            }
-        });
-      });
-
-      // function load_ajax()
-      //       {   
-      //           $.ajax({
-      //               url : "../home/renderAllList",
-      //               type : "get", 
-      //               dateType:"text", // dữ liệu trả về dạng text
-                    
-      //               success : function (result){
-                        
-      //                   $('#result').html(result);
-      //               }
-      //           });
-      //       } 
-      $("#idGetAll").submit(function(e) {
-
-        e.preventDefault(); // avoid to execute the actual submit of the form.
-
-        var form = $(this);
-        var url = form.attr('action');
+        var url = "../home/getAllList";
 
         $.ajax({
             type: "GET",
@@ -130,32 +93,24 @@
                 var view = "";
                 if(dataObj.length > 0) 
                 {
-                  view = '<table class="table">' +
-                            '<thead>' +
+                  view = '<table class="table table-bordered">' +
                               '<tr> ' +
-                              '<th scope="col">Id</th>' +
                               '<th scope="col">Name</th>' +
                               '<th scope="col">Age</th>' +
                               '<th scope="col">Email</th>' +
                               '<th scope="col">Class</th>' +
-                              '</tr>' +
-                            '</thead>' +
-                            '<tbody>';
+                              '</tr>';
                   
                   for(var i = 0; i < dataObj.length; i++) {
 
                     view =  view + '<tr>' +
-                        '<th scope="row">' + dataObj[i].id +'</th>' +
                         '<td>' + dataObj[i].name + '</td>' +
                         '<td>' + dataObj[i].age + '</td>' +
                         '<td>' + dataObj[i].email + '</td>' +
                         '<td>' + dataObj[i].class + '</td>' +
                         '<td>' +
-                        '<form class = "edit" method="post">' +
-                        '<input type="hidden" name="id" value=' + dataObj[i].id + '>' +
-                        '<input class="btn btn-primary btn-edit" data-url="" type="button" data-id=' + dataObj[i].id + ' name="fillToEdit" value="Edit" >'  +
-                        '<input class="btn btn-primary btn-delete" data-url="../home/deleteStudent" type="button" data-id=' + dataObj[i].id + ' name="deleteById" value="Delete" >' +
-                        '</form>' +
+                        '<input class="btn btn-primary edit_btn" type="button" id=' + dataObj[i].id + ' name="edit" value="Edit" >'  +
+                        '<input class="btn btn-primary delete_btn" type="button" id=' + dataObj[i].id + ' name="deleteBy" value="Delete" >' +    
                         '</td>' +
                       '</tr>'; 
                   }
@@ -164,80 +119,95 @@
                   
                 }
 
-                document.getElementById("allList").innerHTML = view;
+                document.getElementById("student_table").innerHTML = view;
 
             }                             
-        });
-      });
+     });
+     
 
       
-      $(document).on('click', '.btn-edit', function() 
-      {
-          alert($(this).data('id'));
-      })
 
-      $(document).on('click', '.btn-delete', function(e) 
-      {
-        e.preventDefault();
-          var idDelete = $(this).data('id');
-          var url = $(this).data('url');
-          
-           $.ajax({
-             type: "POST",
-             url: url,
-             data: "id=" + idDelete,
-             success: function(data)
-             {
-                if(data) alert('Delete Successful');
-                else alert('Delete Unsuccessful');
-                location.reload();
-             }
-           })
-      })
       $(document).ready(function(){  
-        $('#add').click(function(){  
+          $('#add').click(function(){  
             $('#insert').val("Insert");  
             $('#insert_form')[0].reset();  
-        });
+           });
 
-        $('#insert_form').on("submit", function(event){  
+          $(document).on('click', '.delete_btn', function(e){
+
+               e.preventDefault();
+               var student_id = $(this).attr("id");
+               var url = "../home/deleteStudent";
+               
+               $.ajax({
+               type: "POST",
+               url: url,
+               data:{student_id:student_id},
+               success: function(data)
+               {
+                    if(data) alert('Delete Successful');
+                    else alert('Delete Unsuccessful');
+                    location.reload();
+               }
+               })
+          })
+          $(document).on('click', '.edit_btn', function(){  
+           var student_id = $(this).attr("id");  
+           $.ajax({  
+                url:"../home/getStudent",  
+                method:"POST",  
+                data:{student_id:student_id},  
+                dataType:"json",  
+                success:function(data){  
+                     $('#name').val(data.name);  
+                     $('#age').val(data.age);  
+                     $('#email').val(data.email);  
+                     $('#class').val(data.class);    
+                     $('#insert').val("Update");  
+                     $('#add_data_Modal').modal('show');  
+                }  
+           });  
+          });  
+
+           $('#insert_form').on("submit", function(event){  
            event.preventDefault();  
-           if($('#name').val() == "")  
-           {  
-                alert("Name is required");  
-           }  
-           else if($('#age').val() == '')  
-           {  
-                alert("Age is required");  
-           }  
-           else if($('#email').val() == '')  
-           {  
-                alert("Email is required");  
-           }  
-           else if($('#class').val() == '')  
-           {  
-                alert("Class is required");  
-           }  
-           else  
-           {  
-                $.ajax({  
-                     url:"../home/addStudent",  
-                     method:"POST",  
-                     data:$('#insert_form').serialize(),  
-                     beforeSend:function(){  
-                          $('#insert').val("Inserting");  
-                     },  
-                     success:function(data){  
-                          $('#insert_form')[0].reset();  
-                          $('#add_data_Modal').modal('hide');  
-                          if(data) alert("Add Successful");
-                          else alert("Add Unsuccessful");
-                          location.reload();
-                     }  
-                });  
-           }  
+               if($('#name').val() == "")  
+               {  
+                    alert("Name is required");  
+               }  
+               else if($('#age').val() == '')  
+               {  
+                    alert("Age is required");  
+               }  
+               else if($('#email').val() == '')  
+               {  
+                    alert("Email is required");  
+               }  
+               else if($('#class').val() == '')  
+               {  
+                    alert("Class is required");  
+               }  
+               else  
+               {  
+                    $.ajax({  
+                         url:"../home/addStudent",  
+                         method:"POST",  
+                         data:$('#insert_form').serialize(),  
+                         beforeSend:function(){  
+                              $('#insert').val("Inserting");  
+                         },  
+                         success:function(data){  
+                              $('#insert_form')[0].reset();  
+                              $('#add_data_Modal').modal('hide');  
+                              if(data) alert("Add Successful");
+                              else alert("Add Unsuccessful");
+                              location.reload();
+                         }  
+                    });  
+               }  
       });  
-      });  
+      }); 
+
         //   var url = form.attr('action');
           
         //   $.ajax({
