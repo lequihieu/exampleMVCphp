@@ -24,7 +24,7 @@ class Home extends Controller
     public function addStudent() {
         $servername = "localhost";
         $username = "root";
-        $password = "Ridaica123~";
+        $password = "Ridaica123";
         $dbname = "studentdb";
         $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -65,7 +65,7 @@ class Home extends Controller
 
         $servername = "localhost";
         $username = "root";
-        $password = "Ridaica123~";
+        $password = "Ridaica123";
         $dbname = "studentdb";
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -79,7 +79,17 @@ class Home extends Controller
     }
 
     public function deleteStudent() {
+        $servername = "localhost";
+        $username = "root";
+        $password = "Ridaica123";
+        $dbname = "studentdb";
+        $conn = new mysqli($servername, $username, $password, $dbname);
 
+        $id = $_POST['id'];
+
+        $sql = 'DELETE FROM student WHERE id ='. $id;
+        $result = mysqli_query($conn, $sql);
+        echo $result;
     }
 
     public function UpdateStudent() {

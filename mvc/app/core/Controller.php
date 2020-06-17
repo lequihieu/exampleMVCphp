@@ -15,7 +15,7 @@ class Controller
 
     public function viewAddStudent()
     {
-        require_once '../app/views/home/formStudent.php';
+        require_once '../app/views/home/formStudent.html';
         
     }
 
