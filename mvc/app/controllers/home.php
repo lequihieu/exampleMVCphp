@@ -3,6 +3,10 @@
 
 class Home extends Controller
 {
+    const servername = "localhost";
+    const username= "root";
+    const password= "Ridaica123";
+
 
     public function index($name = '')
     {   
@@ -22,52 +26,60 @@ class Home extends Controller
     }
 
     public function addStudent() {
-        $servername = "localhost";
-        $username = "root";
-        $password = "Ridaica123~";
+        
         $dbname = "studentdb";
-        $conn = new mysqli($servername, $username, $password, $dbname);
+        $conn = new mysqli(self::servername, self::username, self::password, $dbname);
 
+        if(!empty($_POST))  
+        {  
+           
+            $name = mysqli_real_escape_string($conn, $_POST["name"]);  
+            $age = mysqli_real_escape_string($conn, $_POST["age"]);  
+            $email = mysqli_real_escape_string($conn, $_POST["email"]);  
+            $class = mysqli_real_escape_string($conn, $_POST["class"]);  
+                
+            if($_POST["student_id"] !== '')  
+            {  
+                $id = $_POST["student_id"];
+                
+                $query = "  
+                UPDATE student   
+                SET name='$name',   
+                age='$age',   
+                email='$email',   
+                class = '$class'   
+                WHERE id=$id";  
+                $message = 'Data Updated'; 
+            }  
+            else  
+            {  
+                $query = "  
+                INSERT INTO student(name, age, email, class)  
+                VALUES('$name', '$age', '$email', '$class');  
+                ";  
+                $message = 'Data Inserted';  
+            } 
+        } 
+        // if ($conn->connect_error) {
+        //     die("Connection failed: " . $conn->connect_error);
+        // }
         
-        //header('Content-type: text/javascript');
-        // $json = array(
-        //     'name' => '',
-        //     'age'  => '',
-        //     'email' => '',
-        //     'class' => '',
-        //     'success' => false
-        // );
-
-        //     $json['name'] = $_POST['name'];
-        //     $json['age'] = $_POST['age'];
-        //     $json['email'] = $_POST['email'];
-        //     $json['class'] = $_POST['class'];
-        //     $json['success'] = true;
+        // $name = $_POST['name'];
+        // $age = $_POST['age'];
+        // $email = $_POST['email'];
+        // $class = $_POST['class'];
+        
+        // $sql = 'INSERT INTO student(name, age, email, class) VALUE('."'".$name."',"."'".$age."','".$email."','".$class."')";
        
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
-        
-        $name = $_POST['name'];
-        $age = $_POST['age'];
-        $email = $_POST['email'];
-        $class = $_POST['class'];
-        
-        $sql = 'INSERT INTO student(name, age, email, class) VALUE('."'".$name."',"."'".$age."','".$email."','".$class."')";
-       
-        $result = mysqli_query($conn, $sql);
+        $result = mysqli_query($conn, $query);
 
-
-        echo $result;
+     
+        echo $message;
     }
 
     public function getAllList() {
-
-        $servername = "localhost";
-        $username = "root";
-        $password = "Ridaica123~";
         $dbname = "studentdb";
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+        $conn = new PDO("mysql:host=$this->servername;dbname=$dbname", self::username, self::password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $stmt = $conn->prepare("SELECT * FROM student");
         $stmt->execute();
@@ -79,11 +91,9 @@ class Home extends Controller
     }
 
     public function deleteStudent() {
-        $servername = "localhost";
-        $username = "root";
-        $password = "Ridaica123~";
+
         $dbname = "studentdb";
-        $conn = new mysqli($servername, $username, $password, $dbname);
+        $conn = new mysqli(self::servername, self::username, self::password, $dbname);
 
         $id = $_POST['student_id'];
 
@@ -93,11 +103,9 @@ class Home extends Controller
     }
 
     public function getStudent() {
-        $servername = "localhost";
-        $username = "root";
-        $password = "Ridaica123~";
+
         $dbname = "studentdb";
-        $conn = new mysqli($servername, $username, $password, $dbname);
+        $conn = new mysqli(self::servername, self::username, self::password, $dbname);
 
         $id = $_POST['student_id'];
 
@@ -105,5 +113,20 @@ class Home extends Controller
         $result = mysqli_query($conn, $sql);
         $row = mysqli_fetch_array($result);
         echo json_encode($row);
+    }
+
+    public function searchStudent() {
+       
+        $dbname = "studentdb";
+        $conn = new PDO("mysql:host=$this->servername;dbname=$dbname", self::username, self::password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $text_search = $_POST['text_search'];
+        $stmt = $conn->prepare('SELECT * from student where CONCAT_WS('. "''" . ', name, age, email, class) LIKE ' . "'" . "%$text_search%" . "'");
+        $stmt->execute();
+      
+        // set the resulting array to associative
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode($result);
     }
 }
