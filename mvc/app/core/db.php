@@ -3,16 +3,22 @@
     class Mysql {
         const servername = "localhost";
         const username = "root";
-        const password = "Ridaica123";
+        const password = "Ridaica123~";
         const dbname = "studentdb";
-
+        
+        //private $conn;
       
         public function __construct()
         {
-           
+            
         }
-        private function getRowById($id, $table) 
-        {
+        private function connectDB() {
+
+            //self::$conn = new mysqli(self::servername, self::username, self::password, self::dbname);
+
+        }
+        public function getRowById($id, $table) 
+        {   
             $conn = new mysqli(self::servername, self::username, self::password, self::dbname);
             $query = "SELECT * FROM $table WHERE id = $id";
             $result = mysqli_query($conn, $query);

@@ -1,11 +1,12 @@
 <?php
 
+require_once '../app/core/db.php';
 
 class Home extends Controller
 {
     const servername = "localhost";
     const username= "root";
-    const password= "Ridaica123";
+    const password= "Ridaica123~";
 
 
     public function index($name = '')
@@ -79,7 +80,8 @@ class Home extends Controller
 
     public function getAllList() {
         $dbname = "studentdb";
-        $conn = new PDO("mysql:host=$this->servername;dbname=$dbname", self::username, self::password);
+        $servername = self::servername;
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", self::username, self::password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $stmt = $conn->prepare("SELECT * FROM student");
         $stmt->execute();
@@ -104,15 +106,12 @@ class Home extends Controller
 
     public function getStudent() {
 
-        $dbname = "studentdb";
-        $conn = new mysqli(self::servername, self::username, self::password, $dbname);
-
+        
         $id = $_POST['student_id'];
-
-        $sql = "SELECT * FROM student WHERE id = '".$id."'";
-        $result = mysqli_query($conn, $sql);
-        $row = mysqli_fetch_array($result);
-        echo json_encode($row);
+        $table = "student";
+        $mysql = new Mysql();
+        $result = $mysql->getRowById($id, $table);
+        echo $result;
     }
 
     public function searchStudent() {
