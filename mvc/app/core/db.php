@@ -1,21 +1,21 @@
 <?php
-
+require_once '../app/model/Student.php';
+require_once '../app/model/Class.php';
     class Mysql {
         const servername = "localhost";
         const username = "root";
-        const password = "Ridaica123~";
+        const password = "Ridaica123";
         const dbname = "studentdb";
         
-        //private $conn;
+        private $conn;
       
         public function __construct()
         {
-            
+            //$this->connectDB();
         }
+
         private function connectDB() {
-
-            //self::$conn = new mysqli(self::servername, self::username, self::password, self::dbname);
-
+            self::$conn = new mysqli(self::servername, self::username, self::password, self::dbname);
         }
         public function getRowById($id, $table) 
         {   
@@ -26,27 +26,84 @@
             return json_encode($row);
         }
 
-        private function deleteRowById($id, $table)
+        public function deleteRowById($id, $table)
         {
-
+            $conn = new mysqli(self::servername, self::username, self::password, self::dbname);
+            $query = "DELETE FROM $table WHERE id = $id";
+            $result = mysqli_query($conn, $query);
+            return $result;
         }
 
-        private function updateInfoById($student, $table) 
+        public function updateStudentById($id, $student, $table) 
         {
+            $conn = new mysqli(self::servername, self::username, self::password, self::dbname);
+            $name = mysqli_real_escape_string($conn, $student->name);
+            $age = mysqli_real_escape_string($conn,$student->age);
+            $email = mysqli_real_escape_string($conn,$student->email);
+        
+            $query = "  
+            UPDATE $table   
+            SET name='$name',   
+            age='$age',   
+            email='$email'  
+            WHERE id=$id";  
 
+            $result = mysqli_query($conn, $query);
+            return $result;
         }
 
-        private function insertInfo($student, $table) 
-        {
-
+        public function insertStudent($student, $table) 
+        {   
+            $conn = new mysqli(self::servername, self::username, self::password, self::dbname);
+            $name = mysqli_real_escape_string($conn, $student->name);
+            $age = mysqli_real_escape_string($conn,$student->age);
+            $email = mysqli_real_escape_string($conn,$student->email);
+            
+            $query = "  
+            INSERT INTO $table(name, age, email)  
+            VALUES('$name', '$age', '$email');  
+            "; 
+            $result = mysqli_query($conn, $query);
         }
 
-        private function getAllRow($table) 
+        public function getAllRow($table) 
         {
+            $dbname = self::dbname;
+            $servername = self::servername;
+            $conn = new PDO("mysql:host=$servername;dbname=$dbname", self::username, self::password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $stmt = $conn->prepare("SELECT * FROM $table");
+            $stmt->execute();
+      
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
         }
 
-        private function getInfoByText($text, $table)
+        public function getListByText($text, $table)
         {
+            $dbname = self::dbname;
+            $servername = self::servername;
+            $conn = new PDO("mysql:host=$this->servername;dbname=$dbname", self::username, self::password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+            $stmt = $conn->prepare('SELECT * from student where CONCAT_WS('. "''" . ', name, age, email, class) LIKE ' . "'" . "%$text%" . "'");
+            $stmt->execute();
+        
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
+        }
+
+        public function insertClass($class, $table)
+        {
+            $conn = new mysqli(self::servername, self::username, self::password, self::dbname);
+            $name_class = mysqli_real_escape_string($conn, $class->name);
+            $teacher_name = mysqli_real_escape_string($conn, $class->teacherName);
+            $max_student = mysqli_real_escape_string($conn, $class->maxStudent);
+            
+            $query = "  
+            INSERT INTO $table(name, teacher_name, max_student)  
+            VALUES('$name_class', '$teacher_name', '$max_student');  
+            "; 
+            $result = mysqli_query($conn, $query);
         }
     }

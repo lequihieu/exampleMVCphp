@@ -14,14 +14,16 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-1">
+            <div class="col-2">
                 <button type="button" name="add" id="add" data-toggle="modal" data-target="#add_data_Modal"
-                    class="btn btn-warning">Add Student</button>
+                    class="btn btn-warning">Add Info Student</button>
                 <p></p>
-                <button type="button" name="add" id="add" data-toggle="modal" data-target="#add_data_Modal"
-                    class="btn btn-warning">Add Class</button>
+                <button type="button" name="add" id="add" data-toggle="modal" data-target="#add_class_Modal"
+                    class="btn btn-warning">Add Info Class</button>
+                    <p></p>
+                <button type="button" name="get_all" id="get_all_info_class" class="btn btn-warning">All Info Class</button>
             </div>
-            <div class="col-11">
+            <div class="col-10">
 
                 <div>
 
@@ -59,13 +61,10 @@
                         <input type="text" name="name" id="name" class="form-control" />
                         <br />
                         <label>Enter Student Age</label>
-                        <textarea name="age" id="age" class="form-control"></textarea>
+                        <input type="number" name="age" id="age" class="form-control"/>
                         <br />
                         <label>Enter Email</label>
                         <input type="text" name="email" id="email" class="form-control" />
-                        <br />
-                        <label>Enter Class</label>
-                        <input type="text" name="class" id="class" class="form-control" />
                         <br />
                         <input type="hidden" name="student_id" id="student_id" />
                         <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-success" />
@@ -77,6 +76,59 @@
             </div>
         </div>
     </div>
+
+    <div id="add_class_Modal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                </div>
+                <div class="modal-body">
+                    <form method="post" id="insert_class_form">
+                        <label>Class Name</label>
+                        <input type="text" name="name_class" id="name_class" class="form-control" />
+                        <br/>
+                        <label>Teacher Name</label>
+                        <input type="text" name="teacher_name" id="teacher_name" class="form-control"/>
+                        <br/>
+                        <label>Max Student</label>
+                        <input type="number" name="max_student" id="max_student" class="form-control">
+                        <br/>
+                        <input type="hidden" name="class_id" id="class_id" />
+                        <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-success" />
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="add_student_into_class_Modal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                </div>
+                <div class="modal-body">
+                    <form method="post" id="insert_student_into_class_form">
+                        <label>Class Name</label>
+                        <input type="text" name="name_class" id="name_class" class="form-control" />
+                        <br/>
+                        <input type="hidden" name="student_class_id" id="student_class_id" />
+                        <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-success" />
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.5.1.js"
         integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
@@ -97,7 +149,6 @@
                         '<th scope="col">Name</th>' +
                         '<th scope="col">Age</th>' +
                         '<th scope="col">Email</th>' +
-                        '<th scope="col">Class</th>' +
                         '<th scope="col">Action</th>' +
                         '</tr>';
 
@@ -107,10 +158,11 @@
                             '<td>' + dataObj[i].name + '</td>' +
                             '<td>' + dataObj[i].age + '</td>' +
                             '<td>' + dataObj[i].email + '</td>' +
-                            '<td>' + dataObj[i].class + '</td>' +
                             '<td>' +
                             '<input class="btn btn-primary edit_btn" type="button" id=' + dataObj[i].id + ' name="edit" value="Edit" >' +
-                            '<input class="btn btn-primary delete_btn" type="button" id=' + dataObj[i].id + ' name="deleteBy" value="Delete" >' +
+                            '<input class="btn btn-success add_student_into_class_btn" type="button" id=' + dataObj[i].id + ' name="add_student_into_class" value="Add Class" >' +
+                            '<input class="btn btn-info get_all_class_btn" type="button" id=' + dataObj[i].id + ' name="get_all_class" value="Get All Class" >' +
+                            '<input class="btn btn-danger delete_btn" type="button" id=' + dataObj[i].id + ' name="deleteBy" value="Delete" >' +
                             '</td>' +
                             '</tr>';
                     }
@@ -122,6 +174,33 @@
                 document.getElementById("student_table").innerHTML = view;
         }
 
+        function renderClass(dataObj) {
+            var view = "";
+                if (dataObj.length > 0) {
+                    view = '<table class="table table-bordered">' +
+                        '<tr> ' +
+                        '<th scope="col">Name</th>' +
+                        '<th scope="col">Teacher Name</th>' +
+                        '<th scope="col">Max Student</th>' +
+                        '</tr>';
+
+                    for (var i = 0; i < dataObj.length; i++) {
+
+                        view = view + '<tr>' +
+                            '<td>' + dataObj[i].name + '</td>' +
+                            '<td>' + dataObj[i].teacher_name + '</td>' +
+                            '<td>' + dataObj[i].max_student + '</td>' +
+                            '</tr>';
+                    }
+                    view = view + '</table>';
+
+
+                }
+
+                document.getElementById("student_table").innerHTML = view;
+        }
+
+
         var url = "../home/getAllList";
 
         $.ajax({
@@ -132,9 +211,6 @@
                 render(dataObj);
             }
         });
-
-
-
 
         $(document).ready(function () {
             $('#add').click(function () {
@@ -156,7 +232,6 @@
                         success: function (data) {
                             var dataObj = JSON.parse(data);
                             render(dataObj);
-                            
                         }
                     });
                 }
@@ -190,14 +265,13 @@
                         $('#name').val(data.name);
                         $('#age').val(data.age);
                         $('#email').val(data.email);
-                        $('#class').val(data.class);
                         $('#student_id').val(data.id);
                         $('#insert').val("Update");
                         $('#add_data_Modal').modal('show');
                     }
                 });
             });
-
+            
             $('#insert_form').on("submit", function (event) {
                 event.preventDefault();
                 if ($('#name').val() == "") {
@@ -208,9 +282,6 @@
                 }
                 else if ($('#email').val() == '') {
                     alert("Email is required");
-                }
-                else if ($('#class').val() == '') {
-                    alert("Class is required");
                 }
                 else {
                     $.ajax({
@@ -229,6 +300,63 @@
                     });
                 }
             });
+
+            $('#insert_class_form').on("submit", function (event) {
+                event.preventDefault();
+                if ($('#name_class').val() == "") {
+                    alert("Name is required");
+                }
+                else {
+                    $.ajax({
+                        url: "../home/addClass",
+                        method: "POST",
+                        data: $('#insert_class_form').serialize(),
+                        beforeSend: function () {
+                            $('#insert').val("Inserting");
+                        },
+                        success: function (data) {
+                            $('#insert_class_form')[0].reset();
+                            $('#add_data_Modal').modal('hide');
+                            alert(data);
+                            location.reload();
+                        }
+                    });
+                }
+            });
+
+            $(document).on('click', '#get_all_info_class', function() {
+                
+                $.ajax({
+                    url: "../home/getAllClass",
+                    type: "GET",
+                    success: function (data) {
+                        $dataObj = JSON.parse(data);
+                        renderClass($dataObj);
+                    }
+                });
+            });
+
+            // $(document).on('click', '.get_all_class_btn', function() {
+
+            //     var student_id = $(this).attr("id");
+            //     $.ajax({
+            //         type : "POST",
+            //         url: "../home/getAllClassById",
+            //         data : {student_id : student_id},
+            //         success: function (data) {
+            //             $dataObj = JSON.parse(data);
+            //             rederClass($dataObj);
+            //         }
+            //     });
+            // });
+
+            $(document).on('click', '.add_student_into_class_btn', function() {
+                
+                $('#add_student_into_class_Modal').modal('show');
+                
+            });
+
+            $(document).on('click', )
         });
 
 
