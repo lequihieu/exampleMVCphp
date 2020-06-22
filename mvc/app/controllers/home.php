@@ -106,4 +106,24 @@ class Home extends Controller
         $result = $mysql->getAllRow($table);
         echo json_encode($result);
     }
+
+    public function addStudentIntoClass() {
+        $mysql = new Mysql();
+        $tableStudentClass = "class_student";
+        $tableClass = "class";
+        $studentId = $_POST['student_class_id'];
+        $name_class = $_POST['name_class_add'];
+        $classId = $mysql->getIdClassFromName($name_class, $tableClass);
+        $result = $mysql->insertStudentIntoClass($studentId, $classId, $tableStudentClass);
+        echo $result;
+    }
+
+    public function getAllClassByStudentId() {
+        $mysql = new Mysql();
+        $table = "class";
+        $tableStudentClass = "class_student";
+        $studentId = $_POST['student_id'];
+        $result = $mysql->getAllClassById($table, $tableStudentClass, $studentId);
+        echo json_encode($result);
+    }
 }

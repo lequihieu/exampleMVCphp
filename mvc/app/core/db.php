@@ -106,4 +106,43 @@ require_once '../app/model/Class.php';
             "; 
             $result = mysqli_query($conn, $query);
         }
+
+        public function getIdClassFromName($name_class, $table) {
+            $conn = new mysqli(self::servername, self::username, self::password, self::dbname);
+            $name_class = mysqli_real_escape_string($conn, $name_class);
+
+            $query = "SELECT `id` FROM $table WHERE `name` = '$name_class'";
+            $result = mysqli_query($conn, $query);
+            $row = mysqli_fetch_array($result);
+            return $row['id'];
+        }
+
+        public function insertStudentIntoClass($studentId, $classId, $table) {
+            $conn = new mysqli(self::servername, self::username, self::password, self::dbname);
+
+            $query = "
+            INSERT INTO $table(class_id, student_id)
+            VALUES('$classId', '$studentId');
+            ";
+
+            $result = mysqli_query($conn, $query);
+            return $result;
+        }
+
+        public function getAllClassById($class_table, $class_student_table, $studentId) {
+
+            $dbname = self::dbname;
+            $servername = self::servername;
+            $conn = new PDO("mysql:host=$this->servername;dbname=$dbname", self::username, self::password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $conn->prepare("
+            SELECT * FROM $class_table 
+            WHERE id IN 
+            (SELECT c.class_id FROM $class_student_table c WHERE c.student_id = $studentId)");
+            $stmt->execute();
+        
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
+        }
     }

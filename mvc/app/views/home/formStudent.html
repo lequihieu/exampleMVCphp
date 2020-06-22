@@ -96,7 +96,7 @@
                         <input type="number" name="max_student" id="max_student" class="form-control">
                         <br/>
                         <input type="hidden" name="class_id" id="class_id" />
-                        <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-success" />
+                        <input type="submit" name="insert" id="insert_to_class" value="Insert" class="btn btn-success" />
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -116,7 +116,7 @@
                 <div class="modal-body">
                     <form method="post" id="insert_student_into_class_form">
                         <label>Class Name</label>
-                        <input type="text" name="name_class" id="name_class" class="form-control" />
+                        <input type="text" name="name_class_add" id="name_class_add" class="form-control" />
                         <br/>
                         <input type="hidden" name="student_class_id" id="student_class_id" />
                         <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-success" />
@@ -272,6 +272,18 @@
                 });
             });
             
+            $(document).on('click', '.get_all_class_btn', function() {
+                var student_id = $(this).attr("id");
+                $.ajax({
+                    url: "../home/getAllClassByStudentId",
+                    type: "POST",
+                    data: {student_id: student_id},
+                    success: function(data) {
+                        $dataObj = JSON.parse(data);
+                        renderClass($dataObj);
+                    }
+                })
+            })
             $('#insert_form').on("submit", function (event) {
                 event.preventDefault();
                 if ($('#name').val() == "") {
@@ -352,11 +364,32 @@
 
             $(document).on('click', '.add_student_into_class_btn', function() {
                 
+                var student_id = $(this).attr("id");
+                $('#student_class_id').val(student_id);
                 $('#add_student_into_class_Modal').modal('show');
                 
             });
 
-            $(document).on('click', )
+            $('#insert_student_into_class_form').on("submit", function(event) {
+                event.preventDefault();
+                if ($('#name_class_add').val() == "") {
+                    alert("Name Class is required");
+                }
+                else {
+                    $.ajax({
+                        url: "../home/addStudentIntoClass",
+                        method: "POST",
+                        data: $('#insert_student_into_class_form').serialize(),
+                        success: function (data) {
+                            if(data) alert("Add Successful");
+                            else alert("Add Unsuccessful");
+                            $('#insert_student_into_class_form')[0].reset();
+                            $('#add_student_into_class_Modal').modal('hide');
+
+                        }
+                    });
+                }
+            })
         });
 
 
