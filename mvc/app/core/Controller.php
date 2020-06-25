@@ -19,8 +19,8 @@ class Controller
         
     }
 
-    public function addStudent() 
+    public function viewFormLogin() 
     {
-        
+        require_once '../app/views/home/loginForm.html';
     }
 }

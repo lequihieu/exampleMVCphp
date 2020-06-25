@@ -85,8 +85,8 @@ require_once '../app/model/Class.php';
             $servername = self::servername;
             $conn = new PDO("mysql:host=$this->servername;dbname=$dbname", self::username, self::password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-            $stmt = $conn->prepare('SELECT * from student where CONCAT_WS('. "''" . ', name, age, email, class) LIKE ' . "'" . "%$text%" . "'");
+            
+            $stmt = $conn->prepare("SELECT * FROM $table WHERE CONCAT_WS('', name, age, email) LIKE '%$text%' ");
             $stmt->execute();
         
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -144,5 +144,33 @@ require_once '../app/model/Class.php';
         
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $result;
+        }
+
+        public function getUserByPass($table, $username, $password) {
+            $conn = new mysqli(self::servername, self::username, self::password, self::dbname);
+            $query = "SELECT * FROM $table WHERE username = '$username' and password = '$password'";
+            $result = mysqli_query($conn, $query);
+            $row = mysqli_fetch_array($result);
+            return json_encode($row);
+        }
+
+        public function insertQuestion($content_question, $answer_question, $content_answer){
+            $conn = new mysqli(self::servername, self::username, self::password, self::dbname);
+            $query = "  
+            INSERT INTO question(content_question, answer_question)  
+            VALUES('$content_question', '$answer_question');  
+            "; 
+            $result = mysqli_query($conn, $query);
+            $last_id = mysqli_insert_id($conn);
+            var_dump($content_answer);
+            foreach($content_answer as $key => $val) {
+                $query = "  
+                INSERT INTO content_answer(question_id, content, answer)  
+                VALUES($last_id, '$val', $key);  
+                "; 
+                $result = mysqli_query($conn, $query);
+                var_dump($result);
+                var_dump($query);
+            }
         }
     }

@@ -22,6 +22,9 @@ class Home extends Controller
         $this->viewAddStudent();
     }
 
+    public function loginForm() {
+        $this->viewFormLogin();
+    }
     public function addStudent() {
         
         $mysql = new Mysql();
@@ -125,5 +128,23 @@ class Home extends Controller
         $studentId = $_POST['student_id'];
         $result = $mysql->getAllClassById($table, $tableStudentClass, $studentId);
         echo json_encode($result);
+    }
+
+    public function loginUser() {
+        $mysql = new Mysql();
+        $table = "student";
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $result = $mysql->getUserByPass($table, $username, $password);
+        echo $result;
+    }
+
+    public function addQuestion() {
+        $mysql = new Mysql();
+        $content_question = $_POST['content_question'];
+        $answer_question = $_POST['answer_question'];
+        $content_answer = $_POST['content_answer'];
+        $result = $mysql->insertQuestion($content_question, $answer_question, $content_answer);
+        echo $result;
     }
 }

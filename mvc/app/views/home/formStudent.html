@@ -227,7 +227,7 @@
                 }else {
                     $.ajax({
                         url: "../home/searchStudent",
-                        method: "POST",
+                        type: "POST",
                         data: {text_search: text_search},
                         success: function (data) {
                             var dataObj = JSON.parse(data);
