@@ -2,11 +2,11 @@
 
 class Controller
 {
-    public function model($model) 
-    {
-        require_once '../app/model/' .$model . '.php';
-        return new $model();
-    }
+    // public function model($model) 
+    // {
+    //     require_once '../app/model/' .$model . '.php';
+    //     return new $model();
+    // }
 
     public function view($view, $data = [])
     {
@@ -22,5 +22,10 @@ class Controller
     public function viewFormLogin() 
     {
         require_once '../app/views/home/loginForm.html';
+    }
+
+    public function viewTestStudent() 
+    {
+        require_once '../app/views/home/doTest.html';
     }
 }

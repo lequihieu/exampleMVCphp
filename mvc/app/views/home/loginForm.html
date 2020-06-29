@@ -30,7 +30,10 @@
                                 <input type="submit" name="submit" class="btn btn-info btn-md" value="submit">
                             </div>
                             <div id="add_student_form" class="text-right">
-                                <a href="../home/addStudentForm" class="text-info">Home</a>
+                                <a href="../home/addStudentForm" class="text-info">Teacher Page</a>
+                            </div>
+                            <div id="add_student_form" class="text-right">
+                                <a href="../home/student" class="text-info">Student Page</a>
                             </div>
                         </form>
                     </div>
@@ -80,8 +83,9 @@
                             if($dataObj===null) alert("Login Unsuccessful");        
                             else { 
                             alert("Login successful")
-                            setCookie("role", $dataObj.role, 5);
+                            setCookie("id", $dataObj.id, 5);
                             }
+
                         }
                     })
                 }
