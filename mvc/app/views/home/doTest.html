@@ -14,7 +14,11 @@
             	<div id="list_exam"></div>
 			</div>	
 			<div class="col-9">
-            	<div id="list_question"></div>
+            	<div id="list_question">
+					<form method="post" id="take_a_test">
+						<input class="btn btn-primary submit_test_btn" type="submit" id="123" name="submit" value="Submit" >
+					</form>
+				</div>
 			</div>
             </div>
         </div>
@@ -64,10 +68,10 @@
 
 									view = view + '<input type="radio" name="'+ question.id + '" value = "' + j + '"/> ' + answer[j].content+' <br />';
 						}
-						view = view + </br>';
+						view = view + '</br>';
 					}
-					view = view + '<input class="btn btn-primary submit_test_btn" type="submit" id=' + exam_id + ' name="submit" value="Submit" >';
-					view = view + '<input type="hidden" name="count_question" id="count_question" value = ' + dataObj.length+ '/>';
+					view = view + '<input class="btn btn-primary submit_test_btn" type="submit" id="'+ exam_id +'" name="submit" value="Submit" >';
+					view = view + '<input type="hidden" name="count_question" id="count_question" value = "' + dataObj.length+ '"/>';
 					view = view + '</form>';
 				}
 				
@@ -113,10 +117,35 @@
 			})
 		})
 
-		$('#take_a_test').on("submit", function (event) {
-			event.preventDefault();
-			alert($('#count_question').val);
+		$(document).on('click', '.submit_test_btn', function(e){
+			
+			var answer = new Array();
+			var list_question = new Array;
+			var exam_id = $(this).attr("id");
+			e.preventDefault();
+			$.ajax({
+				type: "POST",
+				url: '../home/getListQuestion',
+				data: { id : exam_id},
+				success: function (data) {
+
+					list_question = JSON.parse(data);
+					for(var i = 0; i < list_question.length; i++) {
+						var rq = 'input[name=' + list_question[i].question_id + ']:checked';
+						answer[list_question[i].question_id] = $(rq, '#take_a_test').val()
+					}
+					$.ajax({
+						type: "POST",
+						url: '../home/calculatorExam',
+						data: { id : exam_id, answer_of_student : answer },
+						success: function (data) {
+							alert("Your Score: " + data);
+						}
+					})
+				}
+			})
 		})
+
 
 	</script>
 	

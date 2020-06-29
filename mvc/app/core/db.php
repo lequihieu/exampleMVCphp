@@ -4,7 +4,7 @@ require_once '../app/model/Class.php';
     class Mysql {
         static $servername = "localhost";
         static $username = "root";
-        static $password = "Ridaica123";
+        static $password = "Ridaica123~";
         static $dbname = "studentdb";
         
         private static $conn;

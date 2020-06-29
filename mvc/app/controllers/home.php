@@ -178,6 +178,14 @@ class Home extends Controller
         echo json_encode($res);
     }
 
+    public function getListQuestion() {
+        $mysql = new Mysql();
+        $id = $_POST['id'];
+        $list_question = $mysql->getListQuestionById($id);
+        
+        echo json_encode($list_question);
+    }
+
     public function getListExamById() {
         $mysql = new Mysql();
         $student_id = $_POST['student_id'];
