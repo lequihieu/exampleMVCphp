@@ -4,7 +4,7 @@ require_once '../app/model/Class.php';
     class Mysql {
         static $servername = "localhost";
         static $username = "root";
-        static $password = "Ridaica123~";
+        static $password = "Ridaica123";
         static $dbname = "studentdb";
         
         private static $conn;
@@ -15,15 +15,16 @@ require_once '../app/model/Class.php';
 
         }
 
-        private function connectDB() {
+        private function connectDB() 
+        {
             $dbname = self::$dbname;
             $servername = self::$servername;
             self::$conn = new PDO("mysql:host=$servername;dbname=$dbname", self::$username, self::$password);
             self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
+
         public function getRowById($id, $table) 
         {   
-        
             $query = "SELECT * FROM $table WHERE id = $id";
             
             $stmt = self::$conn->prepare($query);
@@ -42,8 +43,7 @@ require_once '../app/model/Class.php';
         }
 
         public function updateStudentById($id, $student, $table) 
-        {
-           
+        {   
             $name = $student->name;
             $age = $student->age;
             $email = $student->email;
@@ -61,7 +61,6 @@ require_once '../app/model/Class.php';
 
         public function insertStudent($student, $table) 
         {   
-    
             $name = $student->name;
             $age = $student->age;
             $email = $student->email;
@@ -76,8 +75,7 @@ require_once '../app/model/Class.php';
         }
 
         public function getAllRow($table) 
-        {
-            
+        {   
             $stmt = self::$conn->prepare("SELECT * FROM $table");
             $stmt->execute();
       
@@ -110,8 +108,8 @@ require_once '../app/model/Class.php';
             $stmt->execute();
         }
 
-        public function getIdRowFromName($name, $table) {
-           
+        public function getIdRowFromName($name, $table) 
+        {   
             $query = "SELECT `id` FROM $table WHERE `name` = '$name'";
             $stmt = self::$conn->prepare($query);
             $stmt->execute();
@@ -121,8 +119,8 @@ require_once '../app/model/Class.php';
             return $result["id"];
         }
 
-        public function insertStudentIntoClass($studentId, $classId, $table) {
-          
+        public function insertStudentIntoClass($studentId, $classId, $table) 
+        {   
             $query = "
             INSERT INTO $table(class_id, student_id)
             VALUES('$classId', '$studentId');
@@ -209,8 +207,8 @@ require_once '../app/model/Class.php';
             return $result;
         }
 
-        public function getQuestion($id) {
-            
+        public function getQuestion($id) 
+        {    
             $table = "question";
             $question_content = $this->getRowById($id, $table);
             $answer_content = $this->getAnswerContent($id);
@@ -218,7 +216,8 @@ require_once '../app/model/Class.php';
             return $question_content;
         }
         
-        public function getListQuestionById($examination_id) {
+        public function getListQuestionById($examination_id) 
+        {
             $query = "
             SELECT question_id FROM exam_question WHERE examination_id = $examination_id";
             $stmt = self::$conn->prepare($query);
@@ -227,7 +226,8 @@ require_once '../app/model/Class.php';
             return $result;
         }
 
-        public function insertExaminationIntoStudent($examination_id, $student_id) {
+        public function insertExaminationIntoStudent($examination_id, $student_id) 
+        {
             $query = "
             INSERT INTO student_exam(student_id, exam_id)
             VALUES($student_id, $examination_id)";
@@ -235,7 +235,8 @@ require_once '../app/model/Class.php';
             $stmt->execute();
         }
 
-        public function getListExamByStudentId($student_id) {
+        public function getListExamByStudentId($student_id) 
+        {
             $query = "
             SELECT * FROM examination WHERE id IN
             (SELECT exam_id FROM student_exam WHERE student_id = $student_id)

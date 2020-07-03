@@ -57,17 +57,16 @@ class Home extends Controller
         echo $message;
     }
 
-    public function getAllList() {
-        
+    public function getAllList() 
+    {    
         $table = "student";
         $mysql = new Mysql();
         $result = $mysql->getAllRow($table);
         echo json_encode($result);
     }
 
-    public function deleteStudent() {
-
-      
+    public function deleteStudent() 
+    {
         $id = $_POST['student_id'];
         $table = "student";
         $mysql = new Mysql();
@@ -75,8 +74,8 @@ class Home extends Controller
         echo $result;
     }
 
-    public function getStudent() {
-    
+    public function getStudent()
+    {
         $id = $_POST['student_id'];
         $table = "student";
         $mysql = new Mysql();
@@ -84,8 +83,8 @@ class Home extends Controller
         echo json_encode($result);
     }
 
-    public function searchStudent() {
-      
+    public function searchStudent() 
+    { 
         $text_search = $_POST['text_search'];
         $mysql = new Mysql();
         $table = "student";
@@ -93,8 +92,8 @@ class Home extends Controller
         echo json_encode($result);
     }
 
-    public function addClass() {
-
+    public function addClass() 
+    {
         $name_class = $_POST['name_class'];
         $teacher_name = $_POST['teacher_name'];
         $max_student = $_POST['max_student'];
@@ -114,19 +113,20 @@ class Home extends Controller
         echo json_encode($result);
     }
 
-    public function addStudentIntoClass() {
+    public function addStudentIntoClass() 
+    {
         $mysql = new Mysql();
         $tableStudentClass = "class_student";
         $tableClass = "class";
         $studentId = $_POST['student_class_id'];
         $name_class = $_POST['name_class_add'];
         $classId = $mysql->getIdRowFromName($name_class, $tableClass);
-        $result = $mysql->insertStudentIntoClass($studentId, $classId, $tableStudentClass);
-      
+        $result = $mysql->insertStudentIntoClass($studentId, $classId, $tableStudentClass);  
         echo $result;
     }
 
-    public function getAllClassByStudentId() {
+    public function getAllClassByStudentId() 
+    {
         $mysql = new Mysql();
         $table = "class";
         $tableStudentClass = "class_student";
@@ -135,7 +135,8 @@ class Home extends Controller
         echo json_encode($result);
     }
 
-    public function loginUser() {
+    public function loginUser() 
+    {
         $mysql = new Mysql();
         $table = "student";
         $username = $_POST['username'];
@@ -144,7 +145,8 @@ class Home extends Controller
         echo $result;
     }
 
-    public function addQuestion() {
+    public function addQuestion() 
+    {
         $mysql = new Mysql();
         $content_question = $_POST['content_question'];
         $answer_question = $_POST['answer_question'];
@@ -153,7 +155,8 @@ class Home extends Controller
         echo $result;
     }
 
-    public function addExamination() {
+    public function addExamination() 
+    {
         $mysql = new Mysql();
         $name = $_POST['name'];
         $teacher_id = $_POST['teacher_id'];
@@ -162,7 +165,8 @@ class Home extends Controller
         echo $result;
     }
 
-    public function getExamination() {
+    public function getExamination() 
+    {
         $mysql = new Mysql();
         $id = $_POST['id'];
         $table = "examination";
@@ -178,7 +182,8 @@ class Home extends Controller
         echo json_encode($res);
     }
 
-    public function getListQuestion() {
+    public function getListQuestion() 
+    {
         $mysql = new Mysql();
         $id = $_POST['id'];
         $list_question = $mysql->getListQuestionById($id);
@@ -186,13 +191,15 @@ class Home extends Controller
         echo json_encode($list_question);
     }
 
-    public function getListExamById() {
+    public function getListExamById() 
+    {
         $mysql = new Mysql();
         $student_id = $_POST['student_id'];
         $list_exam = $mysql->getListExamByStudentId($student_id);
         echo json_encode($list_exam);
     }
-    public function calculatorExam() {
+    public function calculatorExam() 
+    {
         $mysql = new Mysql();
         $examination_id = $_POST['id'];
         $answer_question_of_student = $_POST['answer_of_student'];
@@ -211,7 +218,8 @@ class Home extends Controller
         
     }
 
-    public function addExaminationIntoStudent() {
+    public function addExaminationIntoStudent() 
+    {
         $mysql = new Mysql();
         $table = "examination";
         $name_exam = $_POST['name_exam_add'];

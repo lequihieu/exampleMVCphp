@@ -15,9 +15,6 @@
 			</div>	
 			<div class="col-9">
             	<div id="list_question">
-					<form method="post" id="take_a_test">
-						<input class="btn btn-primary submit_test_btn" type="submit" id="123" name="submit" value="Submit" >
-					</form>
 				</div>
 			</div>
             </div>
@@ -60,7 +57,7 @@
 					for(var i = 0; i < dataObj.length; i++) {
 						var stt = i + 1;
 						var question = dataObj[i];
-						view = view + '<p>Question '+ question.id +':</p>' +
+						view = view + '<p>Question '+ stt +':</p>' +
 									  '<p>'+ question.content_question+ '</p>';
 									
 						var answer = question.answer_content
