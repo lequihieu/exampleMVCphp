@@ -5,14 +5,46 @@ class ListStudent extends React.Component {
             list : props.data,
             name : "",
             age : "",
-            email : ""
+            email : "",
+            textSearch : ""
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.setName = this.setName.bind(this);
         this.setAge = this.setAge.bind(this);
         this.setEmail = this.setEmail.bind(this);
+        this.setTextSearch = this.setTextSearch.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
     }
-   
+    
+    handleSearch(event) {
+      //console.log(this.state.textSearch);
+ 
+      var bodyFormData = new FormData();
+      bodyFormData.set('text_search', this.state.textSearch);
+
+      var self = this;
+      axios({
+        method: 'post',
+        url: '../home/searchStudent',
+        data: bodyFormData,
+        headers: {'Content-Type': 'multipart/form-data' }
+        })
+        .then(function (response) {
+            //handle success
+            self.setState({
+              list : response.data
+            })
+        })
+        .catch(function (response) {
+            //handle error
+            console.log(response);
+        });
+
+    
+      event.preventDefault();
+
+
+    }
     handleSubmit(event) {
 
       console.log(`
@@ -30,22 +62,26 @@ class ListStudent extends React.Component {
         password : null,
         role : null
       }
-      console.log(user);
+    
       let newList = this.state.list;
       newList.push(user);
 
-      console.log(newList);
+     
       this.setState({
         list : newList
       })
-      console.log(this.state.list);
+     // console.log(this.state.list);
       event.preventDefault();
     }
     
      shouldComponentUpdate(nextProps, nextState){
-       console.log(this.state.name, nextState.name, (this.state.name != nextState.name))
+       
        if (this.state.name != nextState.name) return true;
-       return this.state.list!==nextState.list;
+       if (this.state.age != nextState.age) return true;
+       if (this.state.email != nextState.email) return true;
+       if (this.state.textSearch != nextState.textSearch) return true;
+     
+       return (this.state.list != nextState.list);
      }
 
     setName(event) {
@@ -66,6 +102,11 @@ class ListStudent extends React.Component {
       })
     }
 
+    setTextSearch(event) {
+      this.setState({
+        textSearch : event.target.value
+      })
+    }
     render() {
       return (
         <div>
@@ -101,7 +142,15 @@ class ListStudent extends React.Component {
                   onChange={this.setEmail}
                   />
               </label>
-              <button>Submit</button>
+              <button>Submit</button> <br />
+              
+            </form>
+            <form onSubmit={this.handleSearch}>
+            <input  name="textSearch" 
+                      type="text"
+                      value={this.state.textSearch}
+                      onChange={this.setTextSearch}/>
+            <button>Search</button>
             </form>
           <table class="table table-bordered">
             <tr>
